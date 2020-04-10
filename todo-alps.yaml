@@ -1,0 +1,53 @@
+alps:
+  version: '1.0'
+  doc:
+    value: > 
+      Simple Todo list example
+  
+    id: http://alps.io/profiles/mamund/todo
+    
+    descriptor:
+      # properties
+      - id: id
+        type: semantic
+        text: storage id of todo item
+      
+      - id: body
+        type: semantic
+        text: content of todo item
+
+      # group
+        - id: todo
+          type: semantic
+          text: todo item
+          descriptor:
+          - href: #id
+          - href: #body
+
+      # actions
+      - id: todoList
+        type: safe
+        rt: todo
+        text: return list of todo items
+      
+      - id: todoRead
+        type: safe
+        rt: todo
+        text: return a single todo item
+        descriptor:
+          - href: #id
+      
+      - id: todoAdd
+        type: unsafe
+        rt: todo
+        text: create a new todo item
+        descriptor:
+        - href: #id
+        - href: #body
+      
+      - id: todoRemove
+        type: idempotent
+        rt: todo
+        text: remove a single todo item
+        descriptor:
+        - href: #id
