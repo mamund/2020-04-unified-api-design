@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "CLI utility for ALPS translations",
   "main": "index.js",
+  "bin": {
+    "unified": "index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,5 +28,11 @@
   "bugs": {
     "url": "https://github.com/mamund/2020-04-unified-api-design/issues"
   },
-  "homepage": "https://github.com/mamund/2020-04-unified-api-design#readme"
+  "homepage": "https://github.com/mamund/2020-04-unified-api-design#readme",
+  "dependencies": {
+    "boxen": "^4.0.0",
+    "chalk": "^2.4.2",
+    "yamljs": "^0.3.0",
+    "yargs": "^13.2.4"
+  }
 }
