@@ -1,0 +1,29 @@
+{
+  "name": "2020-04-unified-api-design",
+  "version": "1.0.0",
+  "description": "CLI utility for ALPS translations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mamund/2020-04-unified-api-design.git"
+  },
+  "keywords": [
+    "mamund",
+    "ALPS",
+    "gRPC",
+    "REST",
+    "SDL",
+    "GraphQL",
+    "OpenAPI",
+    "AsyncAPI"
+  ],
+  "author": "Mike Amundsen (@mamund)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mamund/2020-04-unified-api-design/issues"
+  },
+  "homepage": "https://github.com/mamund/2020-04-unified-api-design#readme"
+}
