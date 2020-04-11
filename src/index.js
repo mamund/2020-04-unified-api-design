@@ -18,7 +18,7 @@ var format = options.type.toLowerCase();
 
 // handle requested translation
 switch (format) {
-  case "d":
+  case "s":
   case "sdl":
     rtn = toSDL(alps_document);
     break;
@@ -63,6 +63,7 @@ function toProto(doc) {
   rtn += 'package = "'+doc.alps.name+'"\n';
   rtn += '\n';
 
+  // params
   coll = doc.alps.descriptor.filter(semantic);
   coll.forEach(function(msg) {
     rtn += 'message '+msg.id+'Params {\n';
@@ -73,6 +74,7 @@ function toProto(doc) {
   });
   rtn += '\n';
 
+  // objects
   coll = doc.alps.descriptor.filter(groups);
   coll.forEach(function(msg) {
     rtn += 'message '+msg.id+' {\n';
@@ -89,6 +91,7 @@ function toProto(doc) {
   rtn += '\n';
 
 
+  // procedures
   rtn += 'service '+doc.alps.name+'Service {\n';
   
   coll = doc.alps.descriptor.filter(safe);
@@ -148,7 +151,48 @@ function idempotent(doc) {
 
 function toSDL(doc) {
   var rtn = "";
-  rtn = toJSON(doc);
+  var coll;
+
+  // types
+  coll = doc.alps.descriptor.filter(groups);
+  coll.forEach(function(item) {
+    rtn += 'type '+item.id+' {\n';
+    item.descriptor.forEach(function(prop) {
+      rtn += '  '+prop.id+': String\n';    
+    });
+    rtn += '}\n';
+  }); 
+  rtn += '\n';
+  
+  // query
+  coll = doc.alps.descriptor.filter(safe);
+  coll.forEach(function(item) {
+    rtn += 'type Query {\n';
+    rtn += '  ' +item.id+': ['+item.rt+']\n';
+    rtn += '}\n';
+  });
+  rtn += '\n';
+
+  // mutations
+  rtn += 'Mutation {\n';
+  coll = doc.alps.descriptor.filter(unsafe);
+  coll.forEach(function(item) {
+    rtn += '  '+item.id+'(';
+    if(item.descriptor) {
+      rtn += item.descriptor[0].id+': Object';
+    }  
+    rtn += '): '+item.rt+'\n';
+  });                       
+  coll = doc.alps.descriptor.filter(idempotent);
+  coll.forEach(function(item) {
+    rtn += '  '+item.id+'(';
+    if(item.descriptor) {
+      rtn += item.descriptor[0].id+': String';
+    }  
+    rtn += '): '+item.rt+'\n';  
+  });                       
+  rtn += '}\n';
+
   return rtn;
 }
 
