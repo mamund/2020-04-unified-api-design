@@ -121,7 +121,7 @@ function toProto(doc) {
         rtn += "Params";
       }      
     }
-    rtn += ') returns ('+item.rt+'Collection ) {}\n';  
+    rtn += ') returns ('+item.rt+'Collection) {}\n';  
   });
   
   rtn += '}\n';
