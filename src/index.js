@@ -16,10 +16,13 @@ const YAML = require("yamljs");
 const fs = require('fs');
 
 const options = yargs
- .usage("Usage: -f <alps file> -t <format type> -o <outfile>")
- .option("f", { alias: "file", describe: "Input file (alps.yaml)", type: "string", demandOption: true })
- .option("t", { alias: "type", describe: "Format Type ([j]son, [p]roto, [s]dl, [a]syncapi, [o]penapi)", type: "string", demandOption: false})
- .option("o", { alias: "out", describe: "Output file", type: "string", demandOption: false})
+ .usage("Usage: -f <alpsfile> -t <format type> -o <outfile>")
+ .option("f", { alias: "file", describe: "Input file (alps.yaml)", 
+    type: "string", demandOption: true })
+ .option("t", { alias: "type", describe: "Format Type ([j]son, [p]roto, [s]dl, [a]syncapi, [o]penapi)",
+    type: "string", demandOption: false})
+ .option("o", { alias: "out", describe: "Output file", 
+    type: "string", demandOption: false})
  .argv;
 
 const rxHash = /#/g;
@@ -42,7 +45,7 @@ try {
   format = "json";
 }
 
-// handle requested translation
+// process requested translation
 switch (format) {
   case "s":
   case "sdl":
@@ -70,7 +73,11 @@ switch (format) {
 
 // output directly
 if(options.out) {
-  fs.writeFileSync(options.out, rtn);
+  try {
+    fs.writeFileSync(options.out, rtn);
+  } catch(err) {
+    console.log("ERROR: "+err);
+  }
 }
 else {
   console.log(rtn);
@@ -134,7 +141,7 @@ function toProto(doc) {
     if(item.descriptor) {
       rtn += item.descriptor[0].href;      
     }
-    rtn += ') returns ('+item.rt+'Collection ) {}\n';  
+    rtn += ') returns ('+item.rt+'Response) {}\n';  
   });
   
   coll = doc.alps.descriptor.filter(unsafe);
@@ -143,7 +150,7 @@ function toProto(doc) {
     if(item.descriptor) {
       rtn += item.descriptor[0].href;      
     }
-    rtn += ') returns ('+item.rt+'Collection ) {}\n';  
+    rtn += ') returns ('+item.rt+'Response) {}\n';  
   });
 
   coll = doc.alps.descriptor.filter(idempotent);
@@ -155,7 +162,7 @@ function toProto(doc) {
         rtn += "Params";
       }      
     }
-    rtn += ') returns ('+item.rt+'Collection) {}\n';  
+    rtn += ') returns ('+item.rt+'Response) {}\n';  
   });
   
   rtn += '}\n';
