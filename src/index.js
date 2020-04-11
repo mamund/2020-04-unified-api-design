@@ -19,11 +19,14 @@ const fs = require('fs');
 // args
 const options = yargs
  .usage("Usage: -f <alpsfile> -t <format type> -o <outfile>")
- .option("f", { alias: "file", describe: "Input file (alps.yaml)", 
+ .option("f", { alias: "file", 
+    describe: "Input file (alps.yaml)", 
     type: "string", demandOption: true })
- .option("t", { alias: "type", describe: "Format Type ([j]son, [p]roto, [s]dl, [a]syncapi, [o]penapi)",
+ .option("t", { alias: "type", 
+    describe: "Format Type ([j]son, [p]roto, [s]dl, [a]syncapi, [o]penapi)",
     type: "string", demandOption: false})
- .option("o", { alias: "out", describe: "Output file", 
+ .option("o", { alias: "out", 
+    describe: "Output file", 
     type: "string", demandOption: false})
  .argv;
 
