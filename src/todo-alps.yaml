@@ -21,12 +21,8 @@ alps:
       type: group
       text: todo item
       descriptor:
-      - id: id
-        type: semantic
-        text: storage id of todo item
-      - id: body
-        type: semantic
-        text: content of todo item
+      - href: '#id'
+      - href: '#body'
 
     # actions
     - id: todoList
@@ -39,16 +35,12 @@ alps:
       rt: todoItem
       text: create a new todo item
       descriptor:
-      - id: todoItem
-        type: semantic
-        text: content of todo item
+      - href: '#todoItem'
       
     - id: todoRemove
       type: idempotent
       rt: todoItem
       text: remove a single todo item
       descriptor:
-      - id: id
-        type: semantic
-        text: storage id of todo item
+      - href: '#id'
 

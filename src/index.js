@@ -14,17 +14,34 @@ const chalk = require("chalk");
 const boxen = require("boxen");
 const yargs = require("yargs");
 const YAML = require("yamljs");
+const fs = require('fs');
 
 const options = yargs
- .usage("Usage: -n <name>")
- .option("n", { alias: "name", describe: "Your name", type: "string", demandOption: true })
+ .usage("Usage: -f <alps file> -t <format type> -o <outfile>")
+ .option("f", { alias: "file", describe: "Input file (alps.yaml)", type: "string", demandOption: true })
  .option("t", { alias: "type", describe: "Format Type ([j]son, [p]roto, [s]dl, [a]syncapi, [o]penapi)", type: "string", demandOption: false})
+ .option("o", { alias: "out", describe: "Output file", type: "string", demandOption: false})
  .argv;
 
-// convert YAML into JSON
-var alps_document = YAML.load(options.name);
+const rxHash = /#/g;
+
+var alps_document = {};
+var format = "json";
 var rtn = "";
-var format = options.type.toLowerCase();
+
+// convert YAML into JSON
+try {
+  alps_document = YAML.load(options.file);
+} catch(err) {
+  console.log("ERROR: " + err);
+}
+
+// selection translation
+try {
+  format = options.type.toLowerCase();
+} catch {
+  format = "json";
+}
 
 // handle requested translation
 switch (format) {
@@ -46,13 +63,19 @@ switch (format) {
     break;
   case "j":
   case "json":
-  //default:
     rtn = toJSON(alps_document);
     break;		
+  default:
+    console.log("ERROR: unknown format: "+format);
 }
 
 // output directly
-console.log(rtn);
+if(options.out) {
+  fs.writeFileSync(options.out, rtn);
+}
+else {
+  console.log(rtn);
+}
 
 // *******************************************
 // translators
@@ -93,7 +116,7 @@ function toProto(doc) {
     var c = 0;
     msg.descriptor.forEach(function(prop) {
       c++;
-      rtn += '  string '+prop.id+' = '+c+';\n';    
+      rtn += '  string '+prop.href+' = '+c+';\n';    
     });
     rtn += '}\n';
     rtn += 'message '+msg.id+'Response {\n';
@@ -110,7 +133,7 @@ function toProto(doc) {
   coll.forEach(function(item) {
     rtn += '  rpc '+item.id+'('
     if(item.descriptor) {
-      rtn += item.descriptor[0].id;      
+      rtn += item.descriptor[0].href;      
     }
     rtn += ') returns ('+item.rt+'Collection ) {}\n';  
   });
@@ -119,7 +142,7 @@ function toProto(doc) {
   coll.forEach(function(item) {
     rtn += '  rpc '+item.id+'('
     if(item.descriptor) {
-      rtn += item.descriptor[0].id;      
+      rtn += item.descriptor[0].href;      
     }
     rtn += ') returns ('+item.rt+'Collection ) {}\n';  
   });
@@ -128,8 +151,8 @@ function toProto(doc) {
   coll.forEach(function(item) {
     rtn += '  rpc '+item.id+'('
     if(item.descriptor) {
-      rtn += item.descriptor[0].id;
-      if(item.descriptor[0].id === "id") {
+      rtn += item.descriptor[0].href;
+      if(item.descriptor[0].href === "#id") {
         rtn += "Params";
       }      
     }
@@ -138,6 +161,9 @@ function toProto(doc) {
   
   rtn += '}\n';
  
+  // clean up 
+  rtn = rtn.replace(rxHash,"");
+   
   return rtn;
 }
 
@@ -151,7 +177,7 @@ function toSDL(doc) {
   coll.forEach(function(item) {
     rtn += 'type '+item.id+' {\n';
     item.descriptor.forEach(function(prop) {
-      rtn += '  '+prop.id+': String\n';    
+      rtn += '  '+prop.href+': String\n';    
     });
     rtn += '}\n';
   }); 
@@ -172,7 +198,7 @@ function toSDL(doc) {
   coll.forEach(function(item) {
     rtn += '  '+item.id+'(';
     if(item.descriptor) {
-      rtn += item.descriptor[0].id+': Object';
+      rtn += item.descriptor[0].href+': Object';
     }  
     rtn += '): '+item.rt+'\n';
   });                       
@@ -180,12 +206,14 @@ function toSDL(doc) {
   coll.forEach(function(item) {
     rtn += '  '+item.id+'(';
     if(item.descriptor) {
-      rtn += item.descriptor[0].id+': String';
+      rtn += item.descriptor[0].href+': String';
     }  
     rtn += '): '+item.rt+'\n';  
   });                       
   rtn += '}\n';
 
+  rtn = rtn.replace(rxHash,"");
+  
   return rtn;
 }
 
@@ -199,6 +227,13 @@ function toAsync(doc) {
   var rtn = "";
   rtn = toJSON(doc);
   return rtn;
+}
+
+//*******************************************
+// write out file
+//*******************************************
+function writeFile(fileName, doc) {
+  fs.writeSyncFile(fileName, doc); 
 }
 
 //*******************************************
