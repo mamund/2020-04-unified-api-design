@@ -7,7 +7,6 @@
 // date:    2020-04
 //
 // notes    install as npm install -g .
-//          echoes to console, use pipe to save to file
 // ****************************************************
 
 const chalk = require("chalk");
