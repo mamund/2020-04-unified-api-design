@@ -58,12 +58,14 @@ console.log(rtn);
 // translators
 // *******************************************
 
+// to ALPS JSON
 function toJSON(doc) {
   var rtn = ""; 
   rtn = JSON.stringify(doc, null, 2);
   return rtn
 }
 
+// to proto file
 function toProto(doc) {
   var rtn = "";
   var obj;
@@ -139,26 +141,7 @@ function toProto(doc) {
   return rtn;
 }
 
-function semantic(doc) {
-  return doc.type === "semantic";
-}
-
-function groups(doc) {
-  return doc.type === "group";
-}
-
-function safe(doc) {
-  return  doc.type === "safe";
-}
-
-function unsafe(doc) {
-  return  doc.type === "unsafe";
-}
-
-function idempotent(doc) {
-  return  doc.type === "idempotent";
-}
-
+// to graphql sdl
 function toSDL(doc) {
   var rtn = "";
   var coll;
@@ -216,5 +199,28 @@ function toAsync(doc) {
   var rtn = "";
   rtn = toJSON(doc);
   return rtn;
+}
+
+//*******************************************
+// collection filters
+//*******************************************
+function semantic(doc) {
+  return doc.type === "semantic";
+}
+
+function groups(doc) {
+  return doc.type === "group";
+}
+
+function safe(doc) {
+  return  doc.type === "safe";
+}
+
+function unsafe(doc) {
+  return  doc.type === "unsafe";
+}
+
+function idempotent(doc) {
+  return  doc.type === "idempotent";
 }
 
