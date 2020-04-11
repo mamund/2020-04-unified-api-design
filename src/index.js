@@ -4,7 +4,6 @@ const chalk = require("chalk");
 const boxen = require("boxen");
 const yargs = require("yargs");
 const YAML = require("yamljs");
-const { toXML } = require('jstoxml');
 
 const options = yargs
  .usage("Usage: -n <name>")
@@ -12,31 +11,33 @@ const options = yargs
  .option("t", { alias: "type", describe: "Format Type ([j]son, [p]roto, [s]dl, [a]syncapi, [o]penapi)", type: "string", demandOption: false})
  .argv;
 
-var alps_yaml = YAML.load(options.name);
-var alps_json = alps_yaml;
+// convert YAML into JSON
+var alps_document = YAML.load(options.name);
 var rtn = "";
+var format = options.type.toLowerCase();
 
-switch (options.name.toLowerCase()) {
+// handle requested translation
+switch (format) {
   case "d":
   case "sdl":
-    rtn = toSDL(alps_json);
+    rtn = toSDL(alps_document);
     break;
   case "a":
   case "asyncapi":
-    rtn = toProto(alps_json);
+    rtn = toAsync(alps_document);
     break;
   case "o":		
   case "openapi":
-    rtn = toProto(alps_json);
+    rtn = toOAS(alps_document);
     break;
   case "p":
   case "proto":
-    rtn = toProto(alps_json);
+    rtn = toProto(alps_document);
     break;
   case "j":
   case "json":
-  default:
-    rtn = toJSON(alps_json);
+  //default:
+    rtn = toJSON(alps_document);
     break;		
 }
 
@@ -55,8 +56,94 @@ function toJSON(doc) {
 
 function toProto(doc) {
   var rtn = "";
-  rtn = toJSON(doc);
+  var obj;
+  var coll;
+
+  rtn += 'syntax = "proto3";\n';
+  rtn += 'package = "'+doc.alps.name+'"\n';
+  rtn += '\n';
+
+  coll = doc.alps.descriptor.filter(semantic);
+  coll.forEach(function(msg) {
+    rtn += 'message '+msg.id+'Params {\n';
+    var c = 0;
+    c++;
+    rtn += '  string '+msg.id+' = '+c+';\n';    
+    rtn += '}\n';
+  });
+  rtn += '\n';
+
+  coll = doc.alps.descriptor.filter(groups);
+  coll.forEach(function(msg) {
+    rtn += 'message '+msg.id+' {\n';
+    var c = 0;
+    msg.descriptor.forEach(function(prop) {
+      c++;
+      rtn += '  string '+prop.id+' = '+c+';\n';    
+    });
+    rtn += '}\n';
+    rtn += 'message '+msg.id+'Response {\n';
+    rtn += '  repeated '+msg.id+' '+msg.id+'Collection = 1\n'
+    rtn += '}\n';
+  });
+  rtn += '\n';
+
+
+  rtn += 'service '+doc.alps.name+'Service {\n';
+  
+  coll = doc.alps.descriptor.filter(safe);
+  coll.forEach(function(item) {
+    rtn += '  rpc '+item.id+'('
+    if(item.descriptor) {
+      rtn += item.descriptor[0].id;      
+    }
+    rtn += ') returns ('+item.rt+'Collection ) {}\n';  
+  });
+  
+  coll = doc.alps.descriptor.filter(unsafe);
+  coll.forEach(function(item) {
+    rtn += '  rpc '+item.id+'('
+    if(item.descriptor) {
+      rtn += item.descriptor[0].id;      
+    }
+    rtn += ') returns ('+item.rt+'Collection ) {}\n';  
+  });
+
+  coll = doc.alps.descriptor.filter(idempotent);
+  coll.forEach(function(item) {
+    rtn += '  rpc '+item.id+'('
+    if(item.descriptor) {
+      rtn += item.descriptor[0].id;
+      if(item.descriptor[0].id === "id") {
+        rtn += "Params";
+      }      
+    }
+    rtn += ') returns ('+item.rt+'Collection ) {}\n';  
+  });
+  
+  rtn += '}\n';
+ 
   return rtn;
+}
+
+function semantic(doc) {
+  return doc.type === "semantic";
+}
+
+function groups(doc) {
+  return doc.type === "group";
+}
+
+function safe(doc) {
+  return  doc.type === "safe";
+}
+
+function unsafe(doc) {
+  return  doc.type === "unsafe";
+}
+
+function idempotent(doc) {
+  return  doc.type === "idempotent";
 }
 
 function toSDL(doc) {

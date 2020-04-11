@@ -3,7 +3,7 @@ alps:
   doc:
     value: > 
       Simple Todo list example
-  
+  name: simpleTodo
   id: http://alps.io/profiles/mamund/todo
     
   descriptor:
@@ -17,37 +17,38 @@ alps:
       text: content of todo item
 
     # group
-    - id: todo
-      type: semantic
+    - id: todoItem
+      type: group
       text: todo item
       descriptor:
-      - href: "#id"
-      - href: "#body"
+      - id: id
+        type: semantic
+        text: storage id of todo item
+      - id: body
+        type: semantic
+        text: content of todo item
 
     # actions
     - id: todoList
       type: safe
-      rt: todo
+      rt: todoItem
       text: return list of todo items
-      
-    - id: todoRead
-      type: safe
-      rt: todo
-      text: return a single todo item
-      descriptor:
-        - href: "#id"
-      
+            
     - id: todoAdd
       type: unsafe
-      rt: todo
+      rt: todoItem
       text: create a new todo item
       descriptor:
-      - href: "#id"
-      - href: "#body"
+      - id: todoItem
+        type: semantic
+        text: content of todo item
       
     - id: todoRemove
       type: idempotent
-      rt: todo
+      rt: todoItem
       text: remove a single todo item
       descriptor:
-      - href: "#id"
+      - id: id
+        type: semantic
+        text: storage id of todo item
+
