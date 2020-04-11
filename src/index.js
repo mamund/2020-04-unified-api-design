@@ -9,34 +9,71 @@ const { toXML } = require('jstoxml');
 const options = yargs
  .usage("Usage: -n <name>")
  .option("n", { alias: "name", describe: "Your name", type: "string", demandOption: true })
- .option("t", { alias: "type", describe: "Format Type ( json, xml)", type: "string", demandOption: true})
+ .option("t", { alias: "type", describe: "Format Type ([j]son, [p]roto, [s]dl, [a]syncapi, [o]penapi)", type: "string", demandOption: false})
  .argv;
 
 var alps_yaml = YAML.load(options.name);
 var alps_json = alps_yaml;
-var alps_xml = toXML(alps_json);
+var rtn = "";
 
-if(options.type==="json") {
-  console.log(JSON.stringify(alps_json));
+switch (options.name.toLowerCase()) {
+  case "d":
+  case "sdl":
+    rtn = toSDL(alps_json);
+    break;
+  case "a":
+  case "asyncapi":
+    rtn = toProto(alps_json);
+    break;
+  case "o":		
+  case "openapi":
+    rtn = toProto(alps_json);
+    break;
+  case "p":
+  case "proto":
+    rtn = toProto(alps_json);
+    break;
+  case "j":
+  case "json":
+  default:
+    rtn = toJSON(alps_json);
+    break;		
 }
-if(options.type==="xml") {
-  console.log(alps_xml);
+
+// output directly
+console.log(rtn);
+
+// *******************************************
+// translators
+// *******************************************
+
+function toJSON(doc) {
+  var rtn = ""; 
+  rtn = JSON.stringify(doc, null, 2);
+  return rtn
 }
 
-/*
-const msg = `Hello, ${options.name}!`;
+function toProto(doc) {
+  var rtn = "";
+  rtn = toJSON(doc);
+  return rtn;
+}
 
-const greeting = chalk.white.bold(msg);
+function toSDL(doc) {
+  var rtn = "";
+  rtn = toJSON(doc);
+  return rtn;
+}
 
-const boxenOptions = {
-	 padding: 1,
-	 margin: 1,
-	 borderStyle: "round",
-	 borderColor: "green",
-	 backgroundColor: "#555555"
-};
-const msgBox = boxen( greeting, boxenOptions );
+function toOAS(doc) {
+  var rtn = "";
+  rtn = toJSON(doc);
+  return rtn;
+}
 
-console.log(msgBox);
-*/
+function toAsync(doc) {
+  var rtn = "";
+  rtn = toJSON(doc);
+  return rtn;
+}
 
