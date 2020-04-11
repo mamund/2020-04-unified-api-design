@@ -9,12 +9,14 @@
 // notes    install as npm install -g .
 // ****************************************************
 
+// modules
 const chalk = require("chalk");
 const boxen = require("boxen");
 const yargs = require("yargs");
 const YAML = require("yamljs");
 const fs = require('fs');
 
+// args
 const options = yargs
  .usage("Usage: -f <alpsfile> -t <format type> -o <outfile>")
  .option("f", { alias: "file", describe: "Input file (alps.yaml)", 
@@ -25,8 +27,10 @@ const options = yargs
     type: "string", demandOption: false})
  .argv;
 
+// cleanup regex
 const rxHash = /#/g;
 
+// init vars
 var alps_document = {};
 var format = "json";
 var rtn = "";
@@ -34,14 +38,16 @@ var rtn = "";
 // convert YAML into JSON
 try {
   alps_document = YAML.load(options.file);
-} catch(err) {
+} 
+catch(err) {
   console.log("ERROR: " + err);
 }
 
 // selection translation
 try {
   format = options.type.toLowerCase();
-} catch {
+} 
+catch {
   format = "json";
 }
 
@@ -75,7 +81,8 @@ switch (format) {
 if(options.out) {
   try {
     fs.writeFileSync(options.out, rtn);
-  } catch(err) {
+  } 
+  catch(err) {
     console.log("ERROR: "+err);
   }
 }
