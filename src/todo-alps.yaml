@@ -1,10 +1,12 @@
 alps:
   version: '1.0'
   doc:
-    value: "Simple Todo list example"
+    value: 'Simple Todo list example'
 
   name: simpleTodo
   id: http://alps.io/profiles/mamund/todo
+  root: http://api.example.org/todo
+  
     
   descriptor:
     # properties
