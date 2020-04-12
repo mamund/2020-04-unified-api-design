@@ -1,0 +1,18 @@
+type todoItem {
+  id: String!
+  body: String!
+}
+
+type Query {
+  todoList: [todoItem]
+}
+
+type Mutation {
+  todoAdd(todoItem: String!): todoItem
+  todoRemove(id: String!): todoItem
+}
+
+schema {
+  query: Query,
+  mutation: Mutation
+}

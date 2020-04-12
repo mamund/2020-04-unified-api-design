@@ -112,14 +112,17 @@ function toJSON(doc) {
   return rtn
 }
 
+// ****************************************************
 // to proto file
+// passes https://protogen.marcgravell.com/ validator
+// ****************************************************
 function toProto(doc) {
   var rtn = "";
   var obj;
   var coll;
 
   rtn += 'syntax = "proto3";\n';
-  rtn += 'package = "'+doc.alps.name+'"\n';
+  rtn += 'package '+doc.alps.name+';\n';
   rtn += '\n';
 
   // params
@@ -144,11 +147,10 @@ function toProto(doc) {
     });
     rtn += '}\n';
     rtn += 'message '+msg.id+'Response {\n';
-    rtn += '  repeated '+msg.id+' '+msg.id+'Collection = 1\n'
+    rtn += '  repeated '+msg.id+' '+msg.id+'Collection = 1;\n'
     rtn += '}\n';
   });
   rtn += '\n';
-
 
   // procedures
   rtn += 'service '+doc.alps.name+'Service {\n';
@@ -159,7 +161,10 @@ function toProto(doc) {
     if(item.descriptor) {
       rtn += item.descriptor[0].href;      
     }
-    rtn += ') returns ('+item.rt+'Response) {}\n';  
+    else {
+      rtn += item.rt;
+    }
+    rtn += ') returns ('+item.rt+'Response) {};\n';  
   });
   
   coll = doc.alps.descriptor.filter(unsafe);
@@ -168,7 +173,7 @@ function toProto(doc) {
     if(item.descriptor) {
       rtn += item.descriptor[0].href;      
     }
-    rtn += ') returns ('+item.rt+'Response) {}\n';  
+    rtn += ') returns ('+item.rt+'Response) {};\n';  
   });
 
   coll = doc.alps.descriptor.filter(idempotent);
@@ -180,7 +185,7 @@ function toProto(doc) {
         rtn += "Params";
       }      
     }
-    rtn += ') returns ('+item.rt+'Response) {}\n';  
+    rtn += ') returns ('+item.rt+'Response) {};\n';  
   });
   
   rtn += '}\n';
@@ -201,7 +206,7 @@ function toSDL(doc) {
   coll.forEach(function(item) {
     rtn += 'type '+item.id+' {\n';
     item.descriptor.forEach(function(prop) {
-      rtn += '  '+prop.href+': String\n';    
+      rtn += '  '+prop.href+': String!\n';    
     });
     rtn += '}\n';
   }); 
@@ -217,12 +222,12 @@ function toSDL(doc) {
   rtn += '\n';
 
   // mutations
-  rtn += 'Mutation {\n';
+  rtn += 'type Mutation {\n';
   coll = doc.alps.descriptor.filter(unsafe);
   coll.forEach(function(item) {
     rtn += '  '+item.id+'(';
     if(item.descriptor) {
-      rtn += item.descriptor[0].href+': Object';
+      rtn += item.descriptor[0].href+': String!';
     }  
     rtn += '): '+item.rt+'\n';
   });                       
@@ -230,17 +235,28 @@ function toSDL(doc) {
   coll.forEach(function(item) {
     rtn += '  '+item.id+'(';
     if(item.descriptor) {
-      rtn += item.descriptor[0].href+': String';
+      rtn += item.descriptor[0].href+': String!';
     }  
     rtn += '): '+item.rt+'\n';  
   });                       
   rtn += '}\n';
 
+  // final schema declaration
+  rtn += '\n';
+  rtn += 'schema {\n';
+  rtn += '  query: Query,\n';
+  rtn += '  mutation: Mutation\n';
+  rtn += '}\n';
+  
   rtn = rtn.replace(rxHash,"");
   
   return rtn;
 }
 
+// ***************************************************
+// generate OpenAPI document
+// passes https://apitools.dev/swagger-parser/online/
+// ***************************************************
 function toOAS(doc) {
   var rtn = "";
   
