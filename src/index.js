@@ -304,7 +304,7 @@ function toOAS(doc) {
   });
 
   // deletes
-  coll = doc.alps.descriptor.filter(idempotent);
+  coll = doc.alps.descriptor.filter(remove);
   coll.forEach(function(item) {
     rtn += "  /" + item.id +"/{id}:\n";
     rtn += "    delete:\n";
@@ -376,5 +376,9 @@ function unsafe(doc) {
 
 function idempotent(doc) {
   return  doc.type === "idempotent";
+}
+
+function remove(doc) {
+  return  (doc.type === "idempotent" && doc.ex === "delete");
 }
 
