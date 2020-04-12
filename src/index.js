@@ -246,13 +246,6 @@ function toAsync(doc) {
 }
 
 //*******************************************
-// write out file
-//*******************************************
-function writeFile(fileName, doc) {
-  fs.writeSyncFile(fileName, doc); 
-}
-
-//*******************************************
 // collection filters
 //*******************************************
 function semantic(doc) {
