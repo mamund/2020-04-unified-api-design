@@ -196,7 +196,10 @@ function toProto(doc) {
   return rtn;
 }
 
+// *******************************************
 // to graphql sdl
+// passes https://app.graphqleditor.com/
+// *******************************************
 function toSDL(doc) {
   var rtn = "";
   var coll;
