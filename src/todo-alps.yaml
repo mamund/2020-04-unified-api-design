@@ -1,3 +1,12 @@
+####################################################
+#
+# TODO .....: ALPS interface description document
+#
+# Date .....: 2020-04-13
+# Author ...: Mike Amundsen (@mamund)
+#
+####################################################
+
 alps:
   version: '1.0'
   doc:

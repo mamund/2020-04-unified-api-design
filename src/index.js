@@ -6,6 +6,13 @@
 // author:  @mamund
 // date:    2020-04
 //
+// desc:    translates ALPS.yaml into:
+//          - ALPS.json
+//          - SDL
+//          - protobuf
+//          - openAPI
+//          - asyncAPI
+//
 // notes    install as npm install -g .
 // ****************************************************
 
@@ -346,13 +353,6 @@ function toAsync(doc) {
   var rtn = "";
   rtn = toJSON(doc);
   return rtn;
-}
-
-//*******************************************
-// write out file
-//*******************************************
-function writeFile(fileName, doc) {
-  fs.writeSyncFile(fileName, doc); 
 }
 
 //*******************************************
