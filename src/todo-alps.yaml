@@ -47,7 +47,7 @@ alps:
       
     - id: todoRemove
       type: idempotent
-      ex: delete
+      tags: delete
       rt: todoItem
       text: remove a single todo item
       descriptor:

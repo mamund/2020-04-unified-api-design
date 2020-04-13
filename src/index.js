@@ -393,7 +393,8 @@ function toOAS(doc) {
     rtn += "      properties:\n";
     item.descriptor.forEach(function(prop) {
       rtn += "          " + prop.href+":\n";
-      rtn += "            type: string\n" 
+      rtn += "            type: string\n";
+      rtn += "            example: " + rString(prop.href) + "\n"; 
     });      
   });
   
@@ -468,6 +469,16 @@ function idempotent(doc) {
 }
 
 function remove(doc) {
-  return  (doc.type === "idempotent" && doc.ex === "delete");
+  return  (doc.type === "idempotent" && doc.tags.indexOf("delete")!=-1);
 }
 
+function rString(id) {
+  var rtn = "";
+  if(id.indexOf("id")!=-1) {
+    rtn = Math.random().toString(9).substring(2, 4) + Math.random().toString(9).substring(2, 4);
+  }
+  else {
+    rtn = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+  return rtn;
+}
