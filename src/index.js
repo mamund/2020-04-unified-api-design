@@ -70,10 +70,13 @@ switch (format) {
     rtn = toSDL(alps_document);
     break;
   case "a":
+  case "async":
   case "asyncapi":
     rtn = toAsync(alps_document);
     break;
   case "o":		
+  case "oas":
+  case "open":
   case "openapi":
     rtn = toOAS(alps_document);
     break;
@@ -162,6 +165,7 @@ function toProto(doc) {
     rtn += 'message '+msg.id+'Response {\n';
     rtn += '  repeated '+msg.id+' '+msg.id+'Collection = 1;\n'
     rtn += '}\n';
+    rtn += 'message '+msg.id+'Empty {}\n';
   });
   rtn += '\n';
 
@@ -175,7 +179,7 @@ function toProto(doc) {
       rtn += item.descriptor[0].href;      
     }
     else {
-      rtn += item.rt;
+      rtn += item.rt+'Empty';
     }
     rtn += ') returns ('+item.rt+'Response) {};\n';  
   });
