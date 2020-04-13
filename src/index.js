@@ -14,6 +14,7 @@
 //          - asyncAPI
 //
 // notes    install as npm install -g .
+//          proof-of-concept utility (needs work)
 // ****************************************************
 
 // modules
