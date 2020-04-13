@@ -118,8 +118,8 @@ function toJSON(doc) {
   return rtn
 }
 
-// to proto file
 // ****************************************************
+// to proto file
 // passes https://protogen.marcgravell.com/ validator
 // ****************************************************
 function toProto(doc) {
@@ -283,7 +283,7 @@ function toSDL(doc) {
 }
 
 // ***************************************************
-// generate OpenAPI document
+// to OpenAPI document
 // passes https://apitools.dev/swagger-parser/online/
 // ***************************************************
 function toOAS(doc) {
@@ -406,6 +406,9 @@ function toOAS(doc) {
   return rtn;
 }
 
+// ****************************************************
+// to AsyncAPI document (incomplete)
+// ****************************************************
 function toAsync(doc) {
   var rtn = "";
   // preamble
@@ -436,8 +439,8 @@ function toAsync(doc) {
   rtn += "    - 'mqtt'\n";
   rtn += "\n";
   
-  rtn += "topics:\n";
-  rtn += "";
+  rtn += "# topics:\n";
+  rtn += "# **** TBD ****";
   
   // clean up doc
   rtn = rtn.replace(rxHash,"");
