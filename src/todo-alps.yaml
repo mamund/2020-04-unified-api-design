@@ -1,8 +1,8 @@
-####################################################
-# TODO .....: ALPS interface description document
-# Date .....: 2020-04-13
+######################################################
+# TODO .....: Application-Level Profile Semantics doc
 # Author ...: Mike Amundsen (@mamund)
-####################################################
+# Date .....: 2020-04-13
+######################################################
 
 alps:
   version: '1.0'
@@ -27,7 +27,7 @@ alps:
       text: content of todo item
 
     # groupings
-    # - these are the storae objects
+    # - these are the storage objects
     - id: todoItem
       type: group
       text: todo item
