@@ -105,15 +105,17 @@ else {
 // translators
 // *******************************************
 
+// ****************************************************
 // to ALPS JSON
+// ****************************************************
 function toJSON(doc) {
   var rtn = ""; 
   rtn = JSON.stringify(doc, null, 2);
   return rtn
 }
 
-// ****************************************************
 // to proto file
+// ****************************************************
 // passes https://protogen.marcgravell.com/ validator
 // ****************************************************
 function toProto(doc) {
@@ -413,19 +415,23 @@ function toAsync(doc) {
   rtn += '?? *******************************************************************\n';
   rtn += '\n';
 
+  rtn += "id: '" + doc.alps.id + "'\n";
+  rtn += '\n';
+
+  // info section
   rtn += "info:\n";
   rtn += "  title: " + (doc.alps.name||"ALPS API") + "\n";
   rtn += "  description: " + (doc.alps.doc.value||"Generated from ALPS file " + options.file) +"\n";
   rtn += "  version: '1.0.0'\n";
+  rtn += "  baseTopic: " + doc.alps.name + "\n";
+  rtn += "  host: " + doc.alps.root + "\n";
+  rtn += "  schemes:\n";
+  rtn += "    - 'amqp'\n";
+  rtn += "    - 'mqtt'\n";
   rtn += "\n";
-
-  // server
-  rtn += "servers:\n";
-  rtn += "  production:\n";
-  rtn += "    url: " + doc.alps.root + "\n";
-  rtn += "    protocol: amqp\n";
-  rtn += "    description: broker for " + doc.alps.name + "\n";
-  rtn += "\n";
+  
+  rtn += "topics:\n";
+  rtn += "";
   
   // clean up doc
   rtn = rtn.replace(rxHash,"");
