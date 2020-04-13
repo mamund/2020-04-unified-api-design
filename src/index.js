@@ -69,10 +69,13 @@ switch (format) {
     rtn = toSDL(alps_document);
     break;
   case "a":
+  case "async":
   case "asyncapi":
     rtn = toAsync(alps_document);
     break;
   case "o":		
+  case "oas":
+  case "open":
   case "openapi":
     rtn = toOAS(alps_document);
     break;
