@@ -4,7 +4,10 @@
 We need to track 'ToDo' records in order to improve both timeliness and accuracy of customer follow-up activity.
 
 ## Data
-In this first pass at the application, we need to keep track to to data properties: **id** (a unique value in the data set) and **body** the text content of the ToDo reord.
+In this first pass at the application, we need to keep track of the following data properties: 
+
+ * **id** : a globally unique value for each ToDo record
+ * **body** the text content of the ToDo record
 
 ## Actions
 This edition of the application needs to support three actions:
