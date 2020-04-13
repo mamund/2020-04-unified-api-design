@@ -9,6 +9,7 @@ alps:
   doc:
     value: 'Simple Todo list example'
 
+  # metadata
   name: simpleTodo
   id: http://alps.io/profiles/mamund/todo
   root: http://api.example.org/todo
