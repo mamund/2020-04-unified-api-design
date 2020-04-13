@@ -159,6 +159,7 @@ function toProto(doc) {
     rtn += 'message '+msg.id+'Response {\n';
     rtn += '  repeated '+msg.id+' '+msg.id+'Collection = 1;\n'
     rtn += '}\n';
+    rtn += 'message '+msg.id+'Empty {}\n';
   });
   rtn += '\n';
 
@@ -172,7 +173,7 @@ function toProto(doc) {
       rtn += item.descriptor[0].href;      
     }
     else {
-      rtn += item.rt;
+      rtn += item.id+'Empty';
     }
     rtn += ') returns ('+item.rt+'Response) {};\n';  
   });
