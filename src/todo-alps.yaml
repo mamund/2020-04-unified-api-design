@@ -1,10 +1,7 @@
 ####################################################
-#
 # TODO .....: ALPS interface description document
-#
 # Date .....: 2020-04-13
 # Author ...: Mike Amundsen (@mamund)
-#
 ####################################################
 
 alps:
@@ -16,7 +13,6 @@ alps:
   id: http://alps.io/profiles/mamund/todo
   root: http://api.example.org/todo
   
-    
   descriptor:
     # properties
     - id: id
