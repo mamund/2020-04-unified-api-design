@@ -10,12 +10,14 @@ alps:
     value: 'Simple Todo list example'
 
   # metadata
+  # - various service-related stuff
   name: simpleTodo
-  id: http://alps.io/profiles/mamund/todo
+  id: http://alps.io/profiles/mamund/simpleTodo
   root: http://api.example.org/todo
   
   descriptor:
     # properties
+    # - these are the data elements
     - id: id
       type: semantic
       text: storage id of todo item
@@ -24,7 +26,8 @@ alps:
       type: semantic
       text: content of todo item
 
-    # group
+    # groupings
+    # - these are the storae objects
     - id: todoItem
       type: group
       text: todo item
@@ -33,6 +36,7 @@ alps:
       - href: '#body'
 
     # actions
+    # - these are the operations
     - id: todoList
       type: safe
       rt: todoItem
