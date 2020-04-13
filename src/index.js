@@ -175,7 +175,7 @@ function toProto(doc) {
       rtn += item.descriptor[0].href;      
     }
     else {
-      rtn += item.id+'Empty';
+      rtn += item.rt+'Empty';
     }
     rtn += ') returns ('+item.rt+'Response) {};\n';  
   });
