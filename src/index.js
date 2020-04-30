@@ -209,6 +209,7 @@ function toProto(doc) {
  
   // clean up 
   rtn = rtn.replace(rxHash,"");
+  rtn = rtn.replace(rxQ,"#");
    
   return rtn;
 }
@@ -278,6 +279,7 @@ function toSDL(doc) {
   rtn += '}\n';
   
   rtn = rtn.replace(rxHash,"");
+  rtn = rtn.replace(rxQ,"#");
   
   return rtn;
 }
