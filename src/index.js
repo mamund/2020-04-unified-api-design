@@ -323,17 +323,17 @@ function toOAS(doc) {
   coll.forEach(function(item) {
     rtn += "  /" + item.id +":\n";
     rtn += "    get:\n";
-    rtn += "      summary: '" + (item.text||"get " + item.id) + "'\n";
+    rtn += "      summary: '" + (item.text||item.id) + "'\n";
     rtn += "      operationId: " + item.id + "\n";
     rtn += "      responses:\n";
     rtn += "        200:\n";
-    rtn += "          description: get "+item.id + "\n";
+    rtn += "          description: "+item.id + "\n";
     rtn += "          content:\n";
     rtn += "            application/json:\n";
     rtn += "              schema:\n";
     rtn += "                type: array\n";
     rtn += "                items:\n";
-    rtn += "                  $ref: '" + "??/components/schemas/" + item.rt + "'\n";
+    rtn += "                  $ref: '" + "??/components/schemas/" + (item.rt||item.returns) + "'\n";
   });
   
   // posts
@@ -341,13 +341,13 @@ function toOAS(doc) {
   coll.forEach(function(item) {
     rtn += "  /" + item.id +":\n";
     rtn += "    post:\n";
-    rtn += "      summary: '" + (item.text||"get " + item.id) + "'\n";
+    rtn += "      summary: '" + (item.text||item.id) + "'\n";
     rtn += "      operationId: " + item.id + "\n";
     rtn += "      requestBody:\n";
     rtn += "        content:\n";
     rtn += "          application/json:\n";
     rtn += "            schema:\n";
-    rtn += "              $ref: '??/components/schemas/" + item.rt + "'\n";
+    rtn += "              $ref: '??/components/schemas/" + (item.rt||item.returns) + "'\n";
     rtn += "      responses:\n";
     rtn += "        200:\n";
     rtn += "          description: add "+item.id + "\n";
@@ -356,7 +356,30 @@ function toOAS(doc) {
     rtn += "              schema:\n";
     rtn += "                type: array\n";
     rtn += "                items:\n";
-    rtn += "                  $ref: '" + "??/components/schemas/" + item.rt + "'\n";
+    rtn += "                  $ref: '" + "??/components/schemas/" + (item.rt||item.returns) + "'\n";
+  });
+
+  // put
+  coll = doc.alps.descriptor.filter(update);
+  coll.forEach(function(item) {
+    rtn += "  /" + item.id +":\n";
+    rtn += "    put:\n";
+    rtn += "      summary: '" + (item.text||item.id) + "'\n";
+    rtn += "      operationId: " + item.id + "\n";
+    rtn += "      requestBody:\n";
+    rtn += "        content:\n";
+    rtn += "          application/json:\n";
+    rtn += "            schema:\n";
+    rtn += "              $ref: '??/components/schemas/" + (item.rt||item.returns) + "'\n";
+    rtn += "      responses:\n";
+    rtn += "        200:\n";
+    rtn += "          description: add "+item.id + "\n";
+    rtn += "          content:\n";
+    rtn += "            application/json:\n";
+    rtn += "              schema:\n";
+    rtn += "                type: array\n";
+    rtn += "                items:\n";
+    rtn += "                  $ref: '" + "??/components/schemas/" + (item.rt||item.returns) + "'\n";
   });
 
   // deletes
@@ -364,7 +387,7 @@ function toOAS(doc) {
   coll.forEach(function(item) {
     rtn += "  /" + item.id +"/{id}:\n";
     rtn += "    delete:\n";
-    rtn += "      summary: '" + (item.text||"get " + item.id) + "'\n";
+    rtn += "      summary: '" + (item.text||item.id) + "'\n";
     rtn += "      operationId: " + item.id + "\n";
     rtn += "      parameters:\n";
     item.descriptor.forEach(function(prop) {
@@ -377,7 +400,7 @@ function toOAS(doc) {
     });
     rtn += "      responses:\n";
     rtn += "        204:\n";
-    rtn += "          description: delete "+item.id + "\n";
+    rtn += "          description: delete "+ item.id + "\n";
   });
   rtn += "\n";
     
@@ -473,12 +496,16 @@ function idempotent(doc) {
 }
 
 function remove(doc) {
-  return  (doc.type === "idempotent" && doc.tags.indexOf("delete")!=-1);
+  return  (doc.type === "idempotent" && (doc.tags && doc.tags.indexOf("delete")!=-1));
+}
+
+function update(doc) {
+  return  (doc.type === "idempotent" && (doc.tags && doc.tags.indexOf("update")!=-1));
 }
 
 function rString(id) {
   var rtn = "";
-  if(id.indexOf("id")!=-1) {
+  if(id && id.indexOf("id")!=-1) {
     rtn = Math.random().toString(9).substring(2, 4) + Math.random().toString(9).substring(2, 4);
   }
   else {
