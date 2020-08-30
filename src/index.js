@@ -31,7 +31,7 @@ const options = yargs
     describe: "Input file (alps.yaml)", 
     type: "string", demandOption: true })
  .option("t", { alias: "type", 
-    describe: "Format Type ([j]son, [p]roto, [s]dl, [a]syncapi, [o]penapi)",
+    describe: "Format Type \n([j]son, [p]roto, [s]dl, [a]syncapi, [o]penapi)",
     type: "string", demandOption: false})
  .option("o", { alias: "out", 
     describe: "Output file", 
@@ -49,7 +49,8 @@ var rtn = "";
 
 // convert YAML into JSON
 try {
-  alps_document = YAML.load(options.file);
+  var file = process.cwd() + "/" + options.file;
+  alps_document = YAML.load(file);
 } 
 catch(err) {
   console.log("ERROR: " + err);
