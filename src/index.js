@@ -63,6 +63,9 @@ catch {
   format = "json";
 }
 
+//console.log(alps_document.alps.ext.filter(oasMetadata));
+//return;
+
 // process requested translation
 switch (format) {
   case "s":
@@ -129,7 +132,7 @@ function toProto(doc) {
 
   // preamble
   rtn += 'syntax = "proto3";\n';
-  rtn += 'package '+doc.alps.name+';\n';
+  rtn += 'package '+ (doc.alps.ext.filter(metadata_title)[0].value.replace(/ /g,'_')||"ALPS_API")+';\n';
   rtn += '\n';
 
   // signature
@@ -170,7 +173,7 @@ function toProto(doc) {
   rtn += '\n';
 
   // procedures
-  rtn += 'service '+doc.alps.name+'Service {\n';
+  rtn += 'service '+(doc.alps.ext.filter(metadata_title)[0].value.replace(/ /g,'_')||"ALPS_API")+'_Service {\n';
   
   coll = doc.alps.descriptor.filter(safe);
   coll.forEach(function(item) {
@@ -304,16 +307,17 @@ function toOAS(doc) {
   rtn += '?? *******************************************************************\n';
   rtn += '\n';
   
+    
   // info section
   rtn += "info:\n";
-  rtn += "  title: " + (doc.alps.name||"ALPS API") + "\n";
+  rtn += "  title: " + (doc.alps.ext.filter(metadata_title)[0].value||"ALPS API") + "\n";
   rtn += "  description: " + (doc.alps.doc.value||"Generated from ALPS file " + options.file) +"\n";
   rtn += "  version: 1.0.0\n";
   rtn += "\n";
   
-  if(doc.alps.root) {
+  if(doc.alps.ext.filter(metadata_root)) {
     rtn += "servers:\n"
-    rtn += "- url: '" + doc.alps.root + "'\n";
+    rtn += "- url: '" + doc.alps.ext.filter(metadata_root)[0].value + "'\n";
     rtn += "\n";
   }
   
@@ -503,6 +507,16 @@ function remove(doc) {
 
 function update(doc) {
   return  (doc.type === "idempotent" && (doc.tags && doc.tags.indexOf("update")!=-1));
+}
+
+function metadata_id(doc) {
+  return (doc.type ==="metadata" && (doc.name && doc.name === ("id")));
+}
+function metadata_title(doc) {
+  return (doc.type ==="metadata" && (doc.name && doc.name === ("title")));
+}
+function metadata_root(doc) {
+  return (doc.type ==="metadata" && (doc.name && doc.name === ("root")));
 }
 
 function rString(id) {

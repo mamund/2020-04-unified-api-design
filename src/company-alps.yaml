@@ -5,9 +5,19 @@ alps:
   
   ####################################
   # metadata
-  name: Company API
-  id: http://alps.io/profiles/mamund/company
-  root: http://api.example.org/company
+  ext:
+    - type: metadata
+      name: title
+      value: Company API
+      tags: 'oas'
+    - type: metadata
+      name: id
+      value: http://alps.io/profiles/mamund/company
+      tags: 'oas'
+    - type: metadata
+      name: root 
+      value: http://api.example.org/company
+      tags: 'oas'
   
   descriptor:
     ##################################
