@@ -9,9 +9,8 @@ alps:
   doc:
     value: 'Simple Todo list example'
 
-
-####################################
   # metadata
+  # - various service-related stuff
   ext:
     - type: metadata
       name: title
@@ -25,13 +24,7 @@ alps:
       name: root 
       value: http://api.example.org/todo
       tags: 'oas'
-      
-  # metadata
-  # - various service-related stuff
-  # name: simpleTodo
-  # id: http://alps.io/profiles/mamund/simpleTodo
-  # root: http://api.example.org/todo
-  
+        
   descriptor:
     # properties
     # - these are the data elements
